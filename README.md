@@ -41,7 +41,7 @@ With `HTMLImageElement`:
 ```
 
 
-##TBA:
+##TBD:
 ###Readme:
  - Screenshot with usage / example
  - Note about resetting opacity but not operation
