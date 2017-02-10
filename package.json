@@ -1,0 +1,45 @@
+{
+  "name": "compositr",
+  "version": "1.0.0",
+  "description": "Use canvas to composite images above and below uploaded photograph",
+  "main": "index.js",
+  "scripts": {
+    "webpack": "webpack --progress --colors --watch --debug"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madeagency/profile-picture-generator.git"
+  },
+  "keywords": [
+    "canvas",
+    "photo",
+    "picture",
+    "manipulation",
+    "generation",
+    "javascript"
+  ],
+  "author": "Ross Berkland, Made Agency",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/madeagency/profile-picture-generator/issues"
+  },
+  "homepage": "https://github.com/madeagency/profile-picture-generator#readme",
+  "dependencies": {
+    "blueimp-load-image": "^2.10.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.22.2",
+    "babel-core": "^6.22.1",
+    "babel-loader": "^6.2.10",
+    "babel-plugin-syntax-object-rest-spread": "^6.13.0",
+    "babel-plugin-transform-es2015-classes": "^6.22.0",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.22.0",
+    "babel-preset-env": "^1.1.8",
+    "babel-preset-latest": "^6.22.0",
+    "babelify": "^7.3.0",
+    "browserify": "^14.0.0",
+    "watchify": "^3.9.0",
+    "webpack": "^2.2.1"
+  }
+}

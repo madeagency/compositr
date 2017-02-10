@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Compsitr example</title>
+</head>
+<body>
+
+  <canvas width="600" height="600"></canvas>
+  <input type="file">
+
+  <script type="text/javascript">
+    var runExample = function() {
+      var canvas = document.querySelector('canvas');
+      var input = document.querySelector('input');
+      var compositr = new Compositr(canvas);
+      var onFileUpload = compositr.drawOnUpload([
+        { image: undefined, operation: 'screen' },
+        { image: compositr.load('images/CTEMF-foreground-01.png'), operation: 'source-over' },
+        { image: compositr.load('images/CTEMF-foreground-02.png'), operation: 'screen' },
+        { image: compositr.load('images/CTEMF-logo.png'), operation: 'source-over' },
+      ]);
+      input.addEventListener('change', onFileUpload);
+    }
+  </script>
+
+  <script src="../dist/compositr.js" onload="runExample()"></script>
+</body>
+</html>
