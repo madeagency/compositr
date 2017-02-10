@@ -41,13 +41,14 @@ With `HTMLImageElement`:
 ```
 
 
-##TODO:
-###Readme:
+##TODO
+###Readme
  - Screenshot with usage / example
  - Note about resetting opacity but not operation
  - Full API
  - Link to [supported operations](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation)
  
-###Library:
+###Library
+ - Universal!
  - Responsiveness option
  - Better support for different canvas sizes
