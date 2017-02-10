@@ -1,7 +1,7 @@
 {
   "name": "compositr",
   "version": "0.9.0",
-  "description": "Use canvas to composite images above and below uploaded photograph",
+  "description": "Use canvas to easily composite images. Supports file uploading and image URLs.",
   "main": "index.js",
   "scripts": {
     "webpack": "webpack --progress --colors --watch --debug"
