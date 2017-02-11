@@ -49,6 +49,7 @@ With `HTMLImageElement`:
  - Link to [supported operations](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation)
  
 ###Library
+ - `Compositr.draw` and `Compositr.drawOnUpload` should return a promise
  - Universal!
  - Responsiveness option
  - Better support for different canvas sizes
