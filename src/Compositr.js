@@ -42,10 +42,13 @@ class Compositr {
       }
       if (sourceType === supportedImageSourceTypes.string) {
         resolve(this.loadImageFromUrl(source))
+        return
       }
       if (sourceType === supportedImageSourceTypes.file) {
         resolve(this.loadImageFromFile(source))
+        return
       }
+      throw `Cannot load image from ${sourceType}`
     })
   }
 
