@@ -47,9 +47,31 @@ With `HTMLImageElement`:
  - Note about resetting opacity but not operation
  - Full API
  - Link to [supported operations](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation)
- 
+
 ###Library
  - `Compositr.draw` and `Compositr.drawOnUpload` should return a promise
  - Universal!
  - Responsiveness option
  - Better support for different canvas sizes
+
+ License
+-------
+
+*Compositr* is © 2016 MADE Code PTY Ltd.
+It is free software, and may be redistributed under the terms specified in the [LICENSE] file.
+
+[LICENSE]: LICENSE
+
+Maintained by
+----------------
+
+[![madeagency](https://www.made.co.za/logo.png)](https://www.made.co.za?utm_source=github)
+
+*Compositr* was created and is maintained MADE Code PTY Ltd.
+The names and logos for MADE Code are trademarks of MADE Code PTY Ltd.
+
+We love open source software. See our Github Profile for more.
+
+We're always looking for talented people who love programming. [Get in touch] with us.
+
+[Get in touch]: https://www.made.co.za?utm_source=github
