@@ -1,6 +1,6 @@
 {
   "name": "compositr",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "description": "Use canvas to easily composite images. Supports file uploading and image URLs.",
   "main": "index.js",
   "scripts": {

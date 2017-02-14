@@ -60,7 +60,7 @@ With `HTMLImageElement`:
  License
 -------
 
-*Compositr* is © 2016 MADE Code PTY Ltd.
+*Compositr* is © 2017 MADE Code PTY Ltd.
 It is free software, and may be redistributed under the terms specified in the [LICENSE] file.
 
 [LICENSE]: LICENSE
