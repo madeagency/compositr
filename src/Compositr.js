@@ -71,17 +71,7 @@ class Compositr {
 
   draw(layers: Layer[]) {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
-    const imageLoadPromises = layers.map((layer: Layer) => {
-      return new Promise((resolve, reject) => {
-        Promise.resolve(layer.image).then((image: Image) => {
-          resolve({
-            ...layer,
-            image
-          })
-        })
-      })
-    })
-    Promise.all(imageLoadPromises).then((results) => {
+    this.resolveAllImagePromises(layers).then((results) => {
       const dpi = window.devicePixelRatio || 1
       const width = this.canvas.width / dpi
       const height = this.canvas.height / dpi
@@ -144,6 +134,17 @@ class Compositr {
         })
       })
     })
+  }
+
+  resolveAllImagePromises(layers: Layer[]) {
+    return Promise.all(layers.map((layer: Layer) => {
+      return Promise.resolve(layer.image).then((image: Image) => {
+        return {
+          ...layer,
+          image
+        }
+      })
+    }))
   }
 }
 
