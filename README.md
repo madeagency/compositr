@@ -73,6 +73,7 @@ With an uploaded image:
 
 ### Library
  - `Compositr.draw` and `Compositr.drawOnUpload` should return a promise
+ - Support for `input[type="file"]` in layer: { image: fileInput, ... }
  - Universal!
  - Responsiveness option
  - Better support for different canvas sizes
