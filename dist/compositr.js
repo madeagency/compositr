@@ -977,10 +977,13 @@ var Compositr = function () {
         }
         if (sourceType === _constants.supportedImageSourceTypes.string) {
           resolve(_this.loadImageFromUrl(source));
+          return;
         }
         if (sourceType === _constants.supportedImageSourceTypes.file) {
           resolve(_this.loadImageFromFile(source));
+          return;
         }
+        throw 'Cannot load image from ' + sourceType;
       });
     }
   }, {
@@ -1008,16 +1011,7 @@ var Compositr = function () {
       var _this2 = this;
 
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      var imageLoadPromises = layers.map(function (layer) {
-        return new Promise(function (resolve, reject) {
-          Promise.resolve(layer.image).then(function (image) {
-            resolve(_extends({}, layer, {
-              image: image
-            }));
-          });
-        });
-      });
-      Promise.all(imageLoadPromises).then(function (results) {
+      this.resolveAllImagePromises(layers).then(function (results) {
         var dpi = window.devicePixelRatio || 1;
         var width = _this2.canvas.width / dpi;
         var height = _this2.canvas.height / dpi;
@@ -1089,6 +1083,17 @@ var Compositr = function () {
           });
         });
       });
+    }
+  }, {
+    key: 'resolveAllImagePromises',
+    value: function resolveAllImagePromises(layers) {
+      return Promise.all(layers.map(function (layer) {
+        return Promise.resolve(layer.image).then(function (image) {
+          return _extends({}, layer, {
+            image: image
+          });
+        });
+      }));
     }
   }]);
 
