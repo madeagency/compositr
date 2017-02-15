@@ -9,6 +9,7 @@ Use canvas to easily composite images. Supports file uploading and image URLs
  - Accepts `Promise`s for drawing when images are loaded
  - Helper methods to easily load images via `File` or **URL**
  - Helper methods to easily load images uploaded by user
+ - `Flow` typings
 
 ## Installation
 `npm install compositr --save`
@@ -23,7 +24,15 @@ See [/example](example)
 
 ## Usage
 
-With `HTMLImageElement`, `HTMLCanvasElement` & `Promise`
+`Compositr.draw` is passed an array of `Layer`s which describe the images and how the are composited.
+
+Each `Layer` has 3 properties: `image`, `operation` and `opacity`
+
+ - `image` is one of `<HTMLImageElement> | <HTMLCanvasElement> | <Promise>`
+ - `operation` is a string, see `supportedCompositionOperations` in [src/constants.js](src/constants.js)
+ - `opacity` is a number from `0` to `1`
+
+With `HTMLImageElement`, `HTMLCanvasElement` & `Promise`:
 
 ```javascript
   // Construction
@@ -47,7 +56,8 @@ With `HTMLImageElement`, `HTMLCanvasElement` & `Promise`
   ])
 ```
 
-With an uploaded image:
+`Compositr` makes using file uploads easy by merging `event.target.files` with layers where the image is left `undefined`:
+
 
 ```javascript
   const canvas = document.querySelector('.output')
