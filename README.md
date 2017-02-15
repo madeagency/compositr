@@ -17,56 +17,68 @@ See `/example`
 
 ## Usage
 
-```
-  const canvas = document.querySelector('canvas')
-  const imageElement = document.querySelector('img')
-  const compositr = new Compositr(canvas)
+With `HTMLImageElement`, `HTMLCanvasElement` & `Promise`
+
+```javascript
+  // Construction
+  const outputCanvas = document.querySelector('.output')
+  const compositr = new Compositr(outputCanvas)
+
+  /**
+  * The composition will consist of 3 sources:
+  * 1. An HTMLImageElement 
+  * 2. A HTMLCanvasElement (different to the output canvas)
+  * 3. A Promise for an image loaded via URI by the helper function 
+  */
+  const imageElement = document.querySelector('.some-image')
+  const webglDrawing = document.querySelector('.webgl-drawing')
+  const imageLoadPromise = compositr.load('/assets/images/another-image.png')
+
   compositr.draw([
-    { image: 'someImage.png', operation: 'screen' },
     { image: imageElement },
-    { image: imageLoadPromise, operation: 'source-over', opacity: 0.8 }
+    { image: webglDrawing, operation: 'source-over', opacity: 0.3 },
+    { image: imageLoadPromise, operation: 'screen', opacity: 0.8 }
   ])
 ```
 
-With `HTMLImageElement`:
+With an uploaded image:
 
-```
-  var canvas = document.querySelector('canvas');
-  var input = document.querySelector('input');
-  var compositr = new Compositr(canvas);
-  var onFileUpload = compositr.drawOnUpload([
+```javascript
+  const canvas = document.querySelector('.output')
+  const compositr = new Compositr(canvas)
+  const input = document.querySelector('#fileInput')
+  const onFileUpload = compositr.drawOnUpload([
+    { image: compositr.load('images/background.png'), operation: 'source-over' },
+    // The uploaded image will be inserted here:
     { image: undefined, operation: 'screen' },
-    { image: compositr.load('images/CTEMF-foreground-01.png'), operation: 'source-over' },
-    { image: compositr.load('images/CTEMF-foreground-02.png'), operation: 'screen' },
+    { image: compositr.load('images/foreground.png'), operation: 'screen' },
     { image: compositr.load('images/CTEMF-logo.png'), operation: 'source-over' },
-  ]);
-  input.addEventListener('change', onFileUpload);
+  ])
+  input.addEventListener('change', onFileUpload)
 ```
 
+## TODO
 
-##TODO
-###Readme
+### Readme
  - Screenshot with usage / example
  - Note about resetting opacity but not operation
  - Full API
  - Link to [supported operations](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation)
 
-###Library
+### Library
  - `Compositr.draw` and `Compositr.drawOnUpload` should return a promise
  - Universal!
  - Responsiveness option
  - Better support for different canvas sizes
 
- License
--------
+## License
 
 *Compositr* is © 2017 MADE Code PTY Ltd.
 It is free software, and may be redistributed under the terms specified in the [LICENSE] file.
 
 [LICENSE]: LICENSE
 
-Maintained by
-----------------
+## Maintained by
 
 [![madeagency](https://www.made.co.za/logo.png)](https://www.made.co.za?utm_source=github)
 
