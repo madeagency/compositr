@@ -4,6 +4,12 @@ Climate](https://codeclimate.com/repos/58a2f3f6f6c55b0de700021f/badges/a9f2a07e1
 
 Use canvas to easily composite images. Supports file uploading and image URLs
 
+## Features
+ - Composite several `HTMLImageElement`s and `HTMLCanvasElement`s together in a few lines of code
+ - Accepts `Promise`s for drawing when images are loaded
+ - Helper methods to easily load images via `File` or **URL**
+ - Helper methods to easily load images uploaded by user
+
 ## Installation
 `npm install compositr --save`
 
@@ -13,7 +19,7 @@ or
 
 ## Example
 
-See `/example`
+See [/example](example)
 
 ## Usage
 
