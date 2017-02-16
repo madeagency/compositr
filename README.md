@@ -24,13 +24,15 @@ See [/example](example)
 
 ## Usage
 
-`Compositr.draw` is passed an array of `Layer`s which describe the images and how the are composited.
+`Compositr.draw` is passed an array of `Layer`s which describe the images, how the are composited and the order in which they are drawn.
 
 Each `Layer` has 3 properties: `image`, `operation` and `opacity`
 
  - `image` is one of `<HTMLImageElement> | <HTMLCanvasElement> | <Promise>`
  - `operation` is a string, see `supportedCompositionOperations` in [src/constants.js](src/constants.js)
  - `opacity` is a number from `0` to `1`
+
+**Take note**: `operation` is not reset when each new layer is drawn but `opacity` is reset to `1`
 
 With `HTMLImageElement`, `HTMLCanvasElement` & `Promise`:
 
