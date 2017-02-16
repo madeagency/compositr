@@ -24,7 +24,7 @@ See [/example](example)
 
 ## Usage
 
-`Compositr.draw` is passed an array of `Layer`s which describe the images, how the are composited and the order in which they are drawn.
+`Compositr.draw` is passed an `Array` of `Layer`s which describe the images, how the are composited and the order in which they are drawn (implicitly using the order of items in the `Array`).
 
 Each `Layer` has 3 properties: `image`, `operation` and `opacity`
 
