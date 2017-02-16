@@ -31,73 +31,67 @@ class Compositr {
     this.context = context
 
     const dpi = window.devicePixelRatio || 1
+    const canvasBoundingRect = node.getBoundingClientRect()
+    const { width, height } = canvasBoundingRect
     this.context.scale(dpi, dpi)
+    this.canvas.style.width = `${width}px`
+    this.canvas.style.height = `${height}px`
+    this.canvas.width = width * dpi
+    this.canvas.height = height * dpi
   }
 
-  load(source: Image & string & File) {
-    return new Promise((resolve: Function, reject: Function) => {
-      const sourceType = Object.prototype.toString.call(source)
-      if (sourceType === supportedImageSourceTypes.image) {
-        return source
-      }
-      if (sourceType === supportedImageSourceTypes.string) {
-        resolve(this.loadImageFromUrl(source))
-        return
-      }
-      if (sourceType === supportedImageSourceTypes.file) {
-        resolve(this.loadImageFromFile(source))
-        return
-      }
-      throw `Cannot load image from ${sourceType}`
-    })
-  }
-
-  isCompositionOperationValid(operation: string) {
-    return Object.keys(supportedCompositionOperations).reduce((found: boolean, operationKey: string) => {
-      return found || supportedCompositionOperations[operationKey] === operation
-    }, false)
-  }
-
-  _drawLayer(image: Image, width: number, height: number, operation?: string, opacity?: number) {
+  _drawImage = (image: Image, operation?: string, opacity?: number) => {
     if (operation) {
       this.context.globalCompositeOperation = operation
     }
     if (opacity || opacity === 0) {
       this.context.globalAlpha = opacity
     }
-    this.context.drawImage(image, 0, 0, this.canvas.width / window.devicePixelRatio, this.canvas.height  / window.devicePixelRatio)
+    this.context.drawImage(image, 0, 0, this.canvas.width , this.canvas.height )
     this.context.globalAlpha = 1
   }
 
-  draw(layers: Layer[]) {
+  draw = (layers: Layer[]) => {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
-    this.resolveAllImagePromises(layers).then((results) => {
-      const dpi = window.devicePixelRatio || 1
-      const width = this.canvas.width / dpi
-      const height = this.canvas.height / dpi
-      results.map((result: any) => this._drawLayer(result.image, width, height, result.operation, result.opacity))
+    return Compositr.resolveAllImagePromises(layers).then((results) => {
+      results.map((result: any) => this._drawImage(result.image, result.operation, result.opacity))
     })
   }
 
-  drawOnUpload(layers: Layer[]) {
+  drawOnUpload = (layers: Layer[]) => {
     return (event: Event & any) => {
-      const imageLoadPromises = [...event.target.files].map(this.loadImageFromFile.bind(this))
-      this.draw(this.interpolateLayersWithImages(layers, imageLoadPromises))
+      const files = [...event.target.files]
+      this.draw(Compositr.interpolateLayersWithImages(layers, files.map(file => {
+        return Compositr.loadImageFromFile(file, this.canvas.width, this.canvas.height)
+      })))
     }
   }
 
-  interpolateLayersWithImages(layers: Layer[], images: any[]) {
-    let itemsToInsert = images.reverse()
-    const newLayers =  layers.map((layer: Layer) => {
-      return {
-        ...layer,
-        image: layer && layer.image || itemsToInsert.pop()
+  load = (source: Image & string & File) => {
+    return new Promise((resolve: Function, reject: Function) => {
+      const sourceType = Object.prototype.toString.call(source)
+      if (sourceType === supportedImageSourceTypes.image) {
+        return source
       }
+      if (sourceType === supportedImageSourceTypes.string) {
+        resolve(Compositr.loadImageFromUrl(source))
+        return
+      }
+      if (sourceType === supportedImageSourceTypes.file) {
+        resolve(Compositr.loadImageFromFile(source, this.canvas.width, this.canvas.height))
+        return
+      }
+      throw `Cannot load image from ${sourceType}`
     })
-    return newLayers
   }
 
-  loadImageFromUrl(url: string) {
+  static isCompositionOperationValid(operation: string) {
+    return Object.keys(supportedCompositionOperations).reduce((found: boolean, operationKey: string) => {
+      return found || supportedCompositionOperations[operationKey] === operation
+    }, false)
+  }
+
+  static loadImageFromUrl(url: string) {
     return new Promise((resolve: Function, reject: Function) => {
       if (cache[url]) return cache[url]
       const image = document.createElement('img')
@@ -110,18 +104,17 @@ class Compositr {
     })
   }
 
-  loadImageFromFile(file: File) {
+  static loadImageFromFile(file: File, width: number, height: number) {
     return new Promise((resolve: Function, reject: Function) => {
       let options: any = {
-        maxWidth: this.canvas.width,
-        maxHeight: this.canvas.height,
+        maxWidth: width,
+        maxHeight: height,
         cover: true,
         canvas: true,
-        aspectRatio: 1,
+        aspectRatio: width / height,
         crossOrigin: true,
         noRevoke: true
       }
-
       getMaxDpi(file, (maxDpi: number) => {
         options.pixelRatio = maxDpi
         loadImage.parseMetaData(file, (data) => {
@@ -132,11 +125,11 @@ class Compositr {
             resolve(canvas)
           }, options)
         })
-      })
+      }, window.devicePixelRatio)
     })
   }
 
-  resolveAllImagePromises(layers: Layer[]) {
+  static resolveAllImagePromises(layers: Layer[]) {
     return Promise.all(layers.map((layer: Layer) => {
       return Promise.resolve(layer.image).then((image: Image) => {
         return {
@@ -145,6 +138,17 @@ class Compositr {
         }
       })
     }))
+  }
+
+  static interpolateLayersWithImages(layers: Layer[], images: any[]) {
+    let itemsToInsert = images.reverse()
+    const newLayers =  layers.map((layer: Layer) => {
+      return {
+        ...layer,
+        image: layer && layer.image || itemsToInsert.pop()
+      }
+    })
+    return newLayers
   }
 }
 

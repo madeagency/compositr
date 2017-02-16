@@ -2,6 +2,7 @@
   "plugins": [
     "transform-flow-strip-types",
     "transform-object-rest-spread",
+    "transform-class-properties",
     "syntax-object-rest-spread"
   ],
   "presets": ["env"]

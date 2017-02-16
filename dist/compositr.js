@@ -948,7 +948,56 @@ var cache = {};
 
 var Compositr = function () {
   function Compositr(node) {
+    var _this = this;
+
     _classCallCheck(this, Compositr);
+
+    this._drawImage = function (image, operation, opacity) {
+      if (operation) {
+        _this.context.globalCompositeOperation = operation;
+      }
+      if (opacity || opacity === 0) {
+        _this.context.globalAlpha = opacity;
+      }
+      _this.context.drawImage(image, 0, 0, _this.canvas.width, _this.canvas.height);
+      _this.context.globalAlpha = 1;
+    };
+
+    this.draw = function (layers) {
+      _this.context.clearRect(0, 0, _this.canvas.width, _this.canvas.height);
+      return Compositr.resolveAllImagePromises(layers).then(function (results) {
+        results.map(function (result) {
+          return _this._drawImage(result.image, result.operation, result.opacity);
+        });
+      });
+    };
+
+    this.drawOnUpload = function (layers) {
+      return function (event) {
+        var files = [].concat(_toConsumableArray(event.target.files));
+        _this.draw(Compositr.interpolateLayersWithImages(layers, files.map(function (file) {
+          return Compositr.loadImageFromFile(file, _this.canvas.width, _this.canvas.height);
+        })));
+      };
+    };
+
+    this.load = function (source) {
+      return new Promise(function (resolve, reject) {
+        var sourceType = Object.prototype.toString.call(source);
+        if (sourceType === _constants.supportedImageSourceTypes.image) {
+          return source;
+        }
+        if (sourceType === _constants.supportedImageSourceTypes.string) {
+          resolve(Compositr.loadImageFromUrl(source));
+          return;
+        }
+        if (sourceType === _constants.supportedImageSourceTypes.file) {
+          resolve(Compositr.loadImageFromFile(source, _this.canvas.width, _this.canvas.height));
+          return;
+        }
+        throw 'Cannot load image from ' + sourceType;
+      });
+    };
 
     if (Object.prototype.toString.call(node) !== '[object HTMLCanvasElement]') {
       throw (node && node.toString()) + ' is not a valid HTMLCanvasElement';
@@ -962,84 +1011,23 @@ var Compositr = function () {
     this.context = context;
 
     var dpi = window.devicePixelRatio || 1;
+    var canvasBoundingRect = node.getBoundingClientRect();
+    var width = canvasBoundingRect.width,
+        height = canvasBoundingRect.height;
+
     this.context.scale(dpi, dpi);
+    this.canvas.style.width = width + 'px';
+    this.canvas.style.height = height + 'px';
+    this.canvas.width = width * dpi;
+    this.canvas.height = height * dpi;
   }
 
-  _createClass(Compositr, [{
-    key: 'load',
-    value: function load(source) {
-      var _this = this;
-
-      return new Promise(function (resolve, reject) {
-        var sourceType = Object.prototype.toString.call(source);
-        if (sourceType === _constants.supportedImageSourceTypes.image) {
-          return source;
-        }
-        if (sourceType === _constants.supportedImageSourceTypes.string) {
-          resolve(_this.loadImageFromUrl(source));
-          return;
-        }
-        if (sourceType === _constants.supportedImageSourceTypes.file) {
-          resolve(_this.loadImageFromFile(source));
-          return;
-        }
-        throw 'Cannot load image from ' + sourceType;
-      });
-    }
-  }, {
+  _createClass(Compositr, null, [{
     key: 'isCompositionOperationValid',
     value: function isCompositionOperationValid(operation) {
       return Object.keys(_constants.supportedCompositionOperations).reduce(function (found, operationKey) {
         return found || _constants.supportedCompositionOperations[operationKey] === operation;
       }, false);
-    }
-  }, {
-    key: '_drawLayer',
-    value: function _drawLayer(image, width, height, operation, opacity) {
-      if (operation) {
-        this.context.globalCompositeOperation = operation;
-      }
-      if (opacity || opacity === 0) {
-        this.context.globalAlpha = opacity;
-      }
-      this.context.drawImage(image, 0, 0, this.canvas.width / window.devicePixelRatio, this.canvas.height / window.devicePixelRatio);
-      this.context.globalAlpha = 1;
-    }
-  }, {
-    key: 'draw',
-    value: function draw(layers) {
-      var _this2 = this;
-
-      this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      this.resolveAllImagePromises(layers).then(function (results) {
-        var dpi = window.devicePixelRatio || 1;
-        var width = _this2.canvas.width / dpi;
-        var height = _this2.canvas.height / dpi;
-        results.map(function (result) {
-          return _this2._drawLayer(result.image, width, height, result.operation, result.opacity);
-        });
-      });
-    }
-  }, {
-    key: 'drawOnUpload',
-    value: function drawOnUpload(layers) {
-      var _this3 = this;
-
-      return function (event) {
-        var imageLoadPromises = [].concat(_toConsumableArray(event.target.files)).map(_this3.loadImageFromFile.bind(_this3));
-        _this3.draw(_this3.interpolateLayersWithImages(layers, imageLoadPromises));
-      };
-    }
-  }, {
-    key: 'interpolateLayersWithImages',
-    value: function interpolateLayersWithImages(layers, images) {
-      var itemsToInsert = images.reverse();
-      var newLayers = layers.map(function (layer) {
-        return _extends({}, layer, {
-          image: layer && layer.image || itemsToInsert.pop()
-        });
-      });
-      return newLayers;
     }
   }, {
     key: 'loadImageFromUrl',
@@ -1057,20 +1045,17 @@ var Compositr = function () {
     }
   }, {
     key: 'loadImageFromFile',
-    value: function loadImageFromFile(file) {
-      var _this4 = this;
-
+    value: function loadImageFromFile(file, width, height) {
       return new Promise(function (resolve, reject) {
         var options = {
-          maxWidth: _this4.canvas.width,
-          maxHeight: _this4.canvas.height,
+          maxWidth: width,
+          maxHeight: height,
           cover: true,
           canvas: true,
-          aspectRatio: 1,
+          aspectRatio: width / height,
           crossOrigin: true,
           noRevoke: true
         };
-
         (0, _utils.getMaxDpi)(file, function (maxDpi) {
           options.pixelRatio = maxDpi;
           _blueimpLoadImage2.default.parseMetaData(file, function (data) {
@@ -1081,7 +1066,7 @@ var Compositr = function () {
               resolve(canvas);
             }, options);
           });
-        });
+        }, window.devicePixelRatio);
       });
     }
   }, {
@@ -1094,6 +1079,17 @@ var Compositr = function () {
           });
         });
       }));
+    }
+  }, {
+    key: 'interpolateLayersWithImages',
+    value: function interpolateLayersWithImages(layers, images) {
+      var itemsToInsert = images.reverse();
+      var newLayers = layers.map(function (layer) {
+        return _extends({}, layer, {
+          image: layer && layer.image || itemsToInsert.pop()
+        });
+      });
+      return newLayers;
     }
   }]);
 
