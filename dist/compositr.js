@@ -969,13 +969,14 @@ var Compositr = function () {
         results.map(function (result) {
           return _this._drawImage(result.image, result.operation, result.opacity);
         });
+        return results;
       });
     };
 
     this.drawOnUpload = function (layers) {
       return function (event) {
         var files = [].concat(_toConsumableArray(event.target.files));
-        _this.draw(Compositr.interpolateLayersWithImages(layers, files.map(function (file) {
+        return _this.draw(Compositr.interpolateLayersWithImages(layers, files.map(function (file) {
           return Compositr.loadImageFromFile(file, _this.canvas.width, _this.canvas.height);
         })));
       };
@@ -985,7 +986,8 @@ var Compositr = function () {
       return new Promise(function (resolve, reject) {
         var sourceType = Object.prototype.toString.call(source);
         if (sourceType === _constants.supportedImageSourceTypes.image) {
-          return source;
+          resolve(source);
+          return;
         }
         if (sourceType === _constants.supportedImageSourceTypes.string) {
           resolve(Compositr.loadImageFromUrl(source));
@@ -1033,7 +1035,7 @@ var Compositr = function () {
     key: 'loadImageFromUrl',
     value: function loadImageFromUrl(url) {
       return new Promise(function (resolve, reject) {
-        if (cache[url]) return cache[url];
+        if (cache[url]) return resolve(cache[url]);
         var image = document.createElement('img');
         image.style.display = 'none';
         image.addEventListener('load', function () {

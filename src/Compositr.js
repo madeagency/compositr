@@ -55,13 +55,14 @@ class Compositr {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
     return Compositr.resolveAllImagePromises(layers).then((results) => {
       results.map((result: any) => this._drawImage(result.image, result.operation, result.opacity))
+      return results
     })
   }
 
   drawOnUpload = (layers: Layer[]) => {
     return (event: Event & any) => {
       const files = [...event.target.files]
-      this.draw(Compositr.interpolateLayersWithImages(layers, files.map(file => {
+      return this.draw(Compositr.interpolateLayersWithImages(layers, files.map(file => {
         return Compositr.loadImageFromFile(file, this.canvas.width, this.canvas.height)
       })))
     }
@@ -71,7 +72,8 @@ class Compositr {
     return new Promise((resolve: Function, reject: Function) => {
       const sourceType = Object.prototype.toString.call(source)
       if (sourceType === supportedImageSourceTypes.image) {
-        return source
+        resolve(source)
+        return
       }
       if (sourceType === supportedImageSourceTypes.string) {
         resolve(Compositr.loadImageFromUrl(source))
@@ -93,7 +95,7 @@ class Compositr {
 
   static loadImageFromUrl(url: string) {
     return new Promise((resolve: Function, reject: Function) => {
-      if (cache[url]) return cache[url]
+      if (cache[url]) return resolve(cache[url])
       const image = document.createElement('img')
       image.style.display = 'none'
       image.addEventListener('load', () => {
