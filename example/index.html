@@ -3,27 +3,97 @@
 <head>
   <meta charset="UTF-8">
   <title>Compsitr example</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+    }
+    .split {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      height: 100vh;
+      width: 100%;
+    }
+    .output-container {
+      padding: 20px;
+      display: flex;
+      height: 100%;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .toolbar {
+      margin: 10px 0;
+    }
+    .options {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      overflow: auto;
+      height: 100%;
+      background-color: #222;
+    }
+    .options img {
+      display: inline-block;
+      width: 300px;
+      margin: 20px;
+      border: 5px solid transparent;
+      cursor: move;
+      cursor: grab;
+    }
+
+    .selection {
+      height: 100%;
+      overflow: auto;
+      border: 1px solid lightgray;
+    }
+
+    .selection img {
+      height: 50px;
+      display: block;
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.css">
 </head>
 <body>
 
-  <canvas width="600" height="600"></canvas>
-  <input type="file">
+  <div class="split">
+    <div class="output-container">
+      <canvas class="output" id="output" width="640" height="480"></canvas>
+      <div class="toolbar">
+        <button id="shuffleImagesButton">another image</button>
+        <button id="shuffleOperationsButton">redraw with same images</button>
+        <input type="file">
+      </div>
+      <div class="selection"></div>
+    </div>
+    <div class="options">
+      <img src="./images/1awgnukp5p8-andrew-preble.jpg" />
+      <img src="./images/adl1z8_ngy-stacy-wyss.jpg" />
+      <img src="./images/bqyv0dz9gje-maxwell-young.jpg" />
+      <img src="./images/bxjtqbgpjbs-frederic-koberl.jpg" />
+      <img src="./images/cix5tlq_fgm-nasa.jpg" />
+      <img src="./images/mm5rpmpc9k4-maarten-van-den-heuvel.jpg" />
+      <img src="./images/mmylzhpso2i-mika-matin.jpg" />
+      <img src="./images/ovn1hybge38-paul-morris.jpg" />
+      <img src="./images/oybwimravbi-chelsea-francis.jpg" />
+      <img src="./images/p-rn-n6miag-john-towner.jpg" />
+      <img src="./images/rmziuif2s2q-photo-nic-co-uk-nic.jpg" />
+      <img src="./images/sf9zgg5dnfw-cristina-gottardi.jpg" />
+      <img src="./images/vgyyafeaag0-yuri-catalano.jpg" />
+      <img src="./images/vl4arrcfyg4-chuttersnap.jpg" />
+      <img src="./images/wa6ptz0snjs-aaron-burden.jpg" />
+      <img src="./images/weyamle9fdm-ashim-d-silva.jpg" />
+      <img src="./images/zzkmki0yh6i-anna-popovic.jpg" />
+    </div>
+  </div>
 
-  <script type="text/javascript">
-    var runExample = function() {
-      var canvas = document.querySelector('canvas');
-      var input = document.querySelector('input');
-      var compositr = new Compositr(canvas);
-      var onFileUpload = compositr.drawOnUpload([
-        { image: undefined, operation: 'screen' },
-        { image: compositr.load('images/CTEMF-foreground-01.png'), operation: 'source-over' },
-        { image: compositr.load('images/CTEMF-foreground-02.png'), operation: 'screen' },
-        { image: compositr.load('images/CTEMF-logo.png'), operation: 'source-over' },
-      ]);
-      input.addEventListener('change', onFileUpload);
-    }
-  </script>
-
-  <script src="../dist/compositr.js" onload="runExample()"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <script src="../dist/compositr.js"></script>
+  <script src="./example.js" type="text/babel"></script>
 </body>
 </html>
