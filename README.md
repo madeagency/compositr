@@ -1,4 +1,6 @@
 # Compositr 🌆 + 🌅 = 🌇
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/madeagency/compositr.svg)](https://greenkeeper.io/)
 [![Code
 Climate](https://codeclimate.com/repos/58a2f3f6f6c55b0de700021f/badges/a9f2a07e1f098fff42f7/gpa.svg)](https://codeclimate.com/repos/58a2f3f6f6c55b0de700021f/feed)
 
